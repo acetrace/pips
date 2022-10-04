@@ -2,6 +2,7 @@ import time
 import numpy as np
 import io
 import os
+import sys
 from PIL import Image
 import cv2
 import saverloader
@@ -110,7 +111,7 @@ def run_model(model, rgbs, N, sw):
 
     return trajs_e-pad
     
-def main():
+def main(path):
 
     # the idea in this file is to chain together pips from a long sequence, and return some visualizations
     
@@ -123,7 +124,7 @@ def main():
     S = 50
     N = 1 # number of points to track
 
-    filenames = glob.glob('./demo_images/*.jpg')
+    filenames = glob.glob(os.path.join(path, '*.jpg'))
     filenames = sorted(filenames)
     print('filenames', filenames)
     max_iters = len(filenames)//(S//2)-1 # run slightly overlapping subseqs
@@ -189,5 +190,7 @@ def main():
             
     writer_t.close()
 
+
 if __name__ == '__main__':
-    main()
+    path = sys.argv[1] if len(sys.argv) > 1 else './demo_images'
+    main(path)
