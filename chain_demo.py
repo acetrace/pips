@@ -153,6 +153,7 @@ def main(path, point):
     model.eval()
     
     while global_step < max_iters:
+        print('step {}'.format(global_step))
         
         read_start_time = time.time()
         
@@ -169,6 +170,7 @@ def main(path, point):
         try:
             rgbs = []
             for s in range(S):
+                print('s {}'.format(s))
                 fn = filenames[(global_step-1)*S//2+s]
                 if s==0:
                     print('start frame', fn)
