@@ -1,6 +1,5 @@
 import torch
 import os, pathlib
-import numpy as np
 
 def save(ckpt_dir, optimizer, model, global_step, scheduler=None, model_ema=None, keep_latest=5, model_name='model'):
     if not os.path.exists(ckpt_dir):
@@ -29,6 +28,7 @@ def load(ckpt_dir, model, optimizer=None, scheduler=None, model_ema=None, step=0
         print('-- note this function no longer appends "saved_checkpoints/" before the ckpt_dir --')
     else:
         ckpt_names = os.listdir(ckpt_dir)
+        ckpt_names = [fi for fi in ckpt_names if fi.endswith(".pth")]
         steps = [int((i.split('-')[1]).split('.')[0]) for i in ckpt_names]
         if len(ckpt_names) > 0:
             if step==0:
@@ -55,7 +55,7 @@ def load(ckpt_dir, model, optimizer=None, scheduler=None, model_ema=None, step=0
                 # 3. load the new state dict
                 model.load_state_dict(model_dict, strict=False)
             else:
-                checkpoint = torch.load(path)
+                checkpoint = torch.load(path, map_location=torch.device('mps'))
                 model.load_state_dict(checkpoint['model_state_dict'], strict=False)
                 
             if optimizer is not None:
