@@ -31,8 +31,8 @@ def run_model(model, rgbs, N, sw, point):
     H, W = H_, W_
     rgbs = rgbs_.reshape(B, S, C, H, W)
 
-    x = point[1] * h_ratio
-    y = point[0] * w_ratio
+    x = point[0] * h_ratio
+    y = point[1] * w_ratio
     print('tracking point: [{},{}]'.format(x, y))
 
     # try to pick a point on the dog, so we get an interesting trajectory
