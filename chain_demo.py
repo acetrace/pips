@@ -24,7 +24,7 @@ def run_model(model, rgbs, N, sw, point):
 
     B, S, C, H, W = rgbs.shape
     rgbs_ = rgbs.reshape(B*S, C, H, W)
-    H_, W_ = 360, 640
+    H_, W_ = 1920, 1080
     h_ratio = H_ / H
     w_ratio = W_ / W
     rgbs_ = F.interpolate(rgbs_, (H_, W_), mode='bilinear')
