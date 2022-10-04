@@ -19,7 +19,7 @@ import torch.nn.functional as F
 random.seed(125)
 np.random.seed(125)
 
-def run_model(model, rgbs, N, sw):
+def run_model(model, rgbs, N, sw, point):
     rgbs = rgbs.cuda().float() # B, S, C, H, W
 
     B, S, C, H, W = rgbs.shape
@@ -32,8 +32,8 @@ def run_model(model, rgbs, N, sw):
     # try to pick a point on the dog, so we get an interesting trajectory
     # x = torch.randint(-10, 10, size=(1, N), device=torch.device('cuda')) + 468
     # y = torch.randint(-10, 10, size=(1, N), device=torch.device('cuda')) + 118
-    x = torch.ones((1, N), device=torch.device('cuda')) * 450.0
-    y = torch.ones((1, N), device=torch.device('cuda')) * 100.0
+    x = torch.ones((1, N), device=torch.device('cuda')) * point[0]
+    y = torch.ones((1, N), device=torch.device('cuda')) * point[1]
     xy0 = torch.stack([x, y], dim=-1) # B, N, 2
     _, S, C, H, W = rgbs.shape
 
@@ -110,8 +110,9 @@ def run_model(model, rgbs, N, sw):
         
 
     return trajs_e-pad
-    
-def main(path):
+
+
+def main(path, point):
 
     # the idea in this file is to chain together pips from a long sequence, and return some visualizations
     
@@ -180,7 +181,7 @@ def main(path):
             iter_start_time = time.time()
 
             with torch.no_grad():
-                trajs_e = run_model(model, rgbs, N, sw_t)
+                trajs_e = run_model(model, rgbs, N, sw_t, point)
 
             iter_time = time.time()-iter_start_time
             print('%s; step %06d/%d; rtime %.2f; itime %.2f' % (
@@ -192,5 +193,6 @@ def main(path):
 
 
 if __name__ == '__main__':
-    path = sys.argv[1] if len(sys.argv) > 1 else './demo_images'
-    main(path)
+    image_dir = sys.argv[1] if len(sys.argv) > 1 else './demo_images'
+    start_point = [int(sys.argv[2]), int(sys.argv[3])] if len(sys.argv) > 3 else [450.0, 100.0]
+    main(image_dir, start_point)
