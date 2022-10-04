@@ -33,6 +33,7 @@ def run_model(model, rgbs, N, sw, point):
 
     x = point[0] * h_ratio
     y = point[1] * w_ratio
+    print('tracking point: [{},{}]'.format(x, y))
 
     # try to pick a point on the dog, so we get an interesting trajectory
     # x = torch.randint(-10, 10, size=(1, N), device=torch.device('cuda')) + 468
@@ -158,8 +159,6 @@ def main(path, point):
     model.eval()
     
     while global_step < max_iters:
-        print('step {}'.format(global_step))
-        
         read_start_time = time.time()
         
         global_step += 1
@@ -175,7 +174,7 @@ def main(path, point):
         try:
             rgbs = []
             for s in range(S):
-                print('s {}'.format(s))
+                print('frame {}'.format(s))
                 fn = filenames[(global_step-1)*S//2+s]
                 if s==0:
                     print('start frame', fn)
