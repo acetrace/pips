@@ -122,7 +122,7 @@ def main(path, point):
 
     ## choose hyps
     B = 1
-    S = 50
+    S = 10
     N = 1 # number of points to track
 
     filenames = glob.glob(os.path.join(path, '*.jpg'))
