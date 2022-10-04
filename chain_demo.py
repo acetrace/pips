@@ -25,15 +25,20 @@ def run_model(model, rgbs, N, sw, point):
     B, S, C, H, W = rgbs.shape
     rgbs_ = rgbs.reshape(B*S, C, H, W)
     H_, W_ = 360, 640
+    h_ratio = H_ / H
+    w_ratio = W_ / W
     rgbs_ = F.interpolate(rgbs_, (H_, W_), mode='bilinear')
     H, W = H_, W_
     rgbs = rgbs_.reshape(B, S, C, H, W)
 
+    x = point[0] * h_ratio
+    y = point[1] * w_ratio
+
     # try to pick a point on the dog, so we get an interesting trajectory
     # x = torch.randint(-10, 10, size=(1, N), device=torch.device('cuda')) + 468
     # y = torch.randint(-10, 10, size=(1, N), device=torch.device('cuda')) + 118
-    x = torch.ones((1, N), device=torch.device('cuda')) * point[0]
-    y = torch.ones((1, N), device=torch.device('cuda')) * point[1]
+    x = torch.ones((1, N), device=torch.device('cuda')) * x
+    y = torch.ones((1, N), device=torch.device('cuda')) * y
     xy0 = torch.stack([x, y], dim=-1) # B, N, 2
     _, S, C, H, W = rgbs.shape
 
